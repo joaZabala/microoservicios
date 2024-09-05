@@ -105,7 +105,7 @@
             <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
+        <!--bootstrap -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
