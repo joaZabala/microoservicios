@@ -1,6 +1,6 @@
 package ar.edu.utn.frc.tup.lciii.usuarioservice.FeignClients;
 
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Moto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Moto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

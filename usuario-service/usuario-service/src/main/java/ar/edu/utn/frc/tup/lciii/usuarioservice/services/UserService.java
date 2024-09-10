@@ -1,11 +1,12 @@
 package ar.edu.utn.frc.tup.lciii.usuarioservice.services;
 
 
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaAutoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaMotoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Auto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Moto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaAutoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaMotoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Auto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Moto;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.models.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface UserService {
     User createUser(String name , String lastName);
 
     List<Auto>getAutosByIdUser(Long idUser);
+
+    ResponseEntity<Auto[]> AusotsByUserId(Long idUser);
     List<Moto>getMotosByIdUser(Long idUser);
 
     Auto saveNewCar(Long idUser , AltaAutoDto altaAutoDto);

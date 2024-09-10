@@ -4,10 +4,10 @@ package ar.edu.utn.frc.tup.lciii.usuarioservice.services.impl;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.FeignClients.AutoFeignClient;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.FeignClients.MotoFeignClient;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.entities.UserEntity;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaAutoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaMotoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Auto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Moto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaAutoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaMotoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Auto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Moto;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.models.User;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.repositories.UserRepository;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.services.UserService;
@@ -15,12 +15,12 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +54,23 @@ public class UserServiceImpl implements UserService {
                 restTemplate.getForObject("http://localhost:8081/autos/usuario/"+ id ,List.class);
         return autos;
     }
+
+    /**
+     *
+     * @param idUser
+     * @return una lista de autos por el id de usuario , con restTemplate usando Auto[] ,
+     *  que es como una lista pero declarado como array , es usado para simplificar la programacion
+     */
+    @Override
+    public ResponseEntity<Auto[]> AusotsByUserId(Long idUser) {
+        User existeUser = getUser(idUser);
+        if(existeUser == null){
+            throw new EntityNotFoundException("No existe el usuario ingresado por id");
+        }
+
+        return restTemplate.getForEntity("http://localhost:8081/autos/usuario/"+ idUser , Auto[].class);
+    }
+
     @Override
     public List<Moto> getMotosByIdUser(Long id){
         User existeUser = getUser(id);
@@ -71,7 +88,15 @@ public class UserServiceImpl implements UserService {
         auto.setUsuarioId(idUser);
         auto.setModelo(altaAutoDto.getModelo());
         auto.setMarca(altaAutoDto.getMarca());
-        return autoFeignClient.save(auto);
+
+        ResponseEntity<Auto>  responseEntity
+                = restTemplate.postForEntity("http://localhost:8081/autos/create", auto , Auto.class);
+
+        if(responseEntity.getStatusCode().is2xxSuccessful()){
+            return responseEntity.getBody();
+        }else{
+            throw new EntityNotFoundException(responseEntity.getStatusCode().toString());
+        }
     }
 
     @Override

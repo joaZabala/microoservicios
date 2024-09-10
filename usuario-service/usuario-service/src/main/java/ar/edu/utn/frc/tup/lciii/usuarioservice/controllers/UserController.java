@@ -1,19 +1,17 @@
 package ar.edu.utn.frc.tup.lciii.usuarioservice.controllers;
 
 import ar.edu.utn.frc.tup.lciii.usuarioservice.dtos.UserDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaAutoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.AltaMotoDto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Auto;
-import ar.edu.utn.frc.tup.lciii.usuarioservice.modelosCliente.Moto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaAutoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.AltaMotoDto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Auto;
+import ar.edu.utn.frc.tup.lciii.usuarioservice.Clients.Moto;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.models.User;
 import ar.edu.utn.frc.tup.lciii.usuarioservice.services.UserService;
-import ch.qos.logback.core.model.Model;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +26,10 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @GetMapping("AutosByIdUser/rest/{id}")
+    public  ResponseEntity<Auto[]> getAutosByidUser(@PathVariable Long id){
+        return userService.AusotsByUserId(id);
+    }
     @GetMapping("")
     private ResponseEntity<List<UserDto>> getAllUsers(){
         List<User>users = userService.getAll();
@@ -42,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(modelMapper.map(userService.getUser(id) , UserDto.class));
     }
     @PostMapping("/create")
-    private ResponseEntity<UserDto> postUser(UserDto userDto){
+    private ResponseEntity<UserDto> postUser(@RequestBody UserDto userDto){
        User user = userService.createUser(userDto.getName() , userDto.getLastName());
         return ResponseEntity.ok(modelMapper.map(user , UserDto.class));
     }
